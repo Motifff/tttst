@@ -1,6 +1,5 @@
 let myTable;
 let myMap;
-let myGui;
 let guiSystem;
 
 function preload(){
@@ -9,29 +8,30 @@ function preload(){
 
 function mousePressed() {
     for (let i = 0; i < 4; i++) {
-        if (mouseX < myGui[i].pos[0] + 50 || mouseX > myGui[i].pos[0] - 50) {
-            myGui[i].mode = !myGui[i].mode;
+        if (mouseX < guiSystem.tmper[i].pos[0] + 50 || mouseX > guiSystem.tmper[i].pos[0] - 50) {
+            guiSystem.tmper[i].mode = !guiSystem.tmper[i].mode;
         }
     }
 }
 
 function mouseReleased(){
     for(let i=0;i<4;i++){
-        myGui.tmper[i].mode=true;
+        guiSystem.tmper[i].mode=true;
     }
 }
 
 function theGui(){
     this.data=[];
-    this.len=400
+    this.len=400;
+    this.tmper=[];
     this.born=function(){
         for(let i=0;i<4;i++){
-            myGui[i]=new gui_s(width/2-this.len/2+i*this.len/4,400);
+            this.tmper=new gui_s(width/2-this.len/2+i*this.len/4,400);
         }
     }
     this.show=function(){
         for(let i=0;i<4;i++){
-            myGui[i].show();
+            this.tmper[i].show();
         }
     }
 }
@@ -65,11 +65,13 @@ function setup() {
     textFont('Arial');
     myMap=new Array();
     myMap=myTable.getArray();
-    theGui.
+    guiSystem=new theGui();
+    guiSystem.born();
+
 }
 
 function draw() {
     background(200);
-    ;
+    guiSystem.show();
 
 }
