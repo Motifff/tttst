@@ -35,6 +35,21 @@ function gui_s(_x, _y){
 
     }
 }
+function mouseListener(){
+    if (mouseIsPressed){
+        for(let i=0;i<4;i++){
+            if(mouseX < guiSystem.tmper[i].pos[0] + 50 && mouseX > guiSystem.tmper[i].pos[0] - 50 && abs(mouseY-400)<100){
+                guiSystem.tmper[i].mode=false;
+                ellipse(guiSystem.tmper[i].pos[0],100,100,100);
+            }
+        }
+    } else{
+        for(let i=0;i<4;i++){
+            guiSystem.tmper[i].mode=true;
+        }
+    }
+
+}
 
 function search(a){
     for(let i=0;i<myMap.length;i++){
@@ -62,19 +77,6 @@ function setup() {
 function draw() {
     background(200);
     stroke(255);
-    if (mouseIsPressed){
-        for(let i=0;i<4;i++){
-            if(mouseX < guiSystem.tmper[i].pos[0] + 50 && mouseX > guiSystem.tmper[i].pos[0] - 50 && abs(mouseY-400)<100){
-                guiSystem.tmper[i].mode=false;
-                ellipse(guiSystem.tmper[i].pos[0],100,100,100);
-            }
-        }
-    } else{
-        for(let i=0;i<4;i++){
-            guiSystem.tmper[i].mode=true;
-        }
-    }
-    print(guiSystem.tmper[1]);
+    mouseListener();
     guiSystem.show();
-
 }
