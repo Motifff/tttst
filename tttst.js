@@ -3,6 +3,8 @@ let myMap;
 let guiSystem;
 let wordMap;
 let songData;
+let score=0;
+let scene=0;
 
 //preload must be at the top of the program
 function preload(){
@@ -10,18 +12,19 @@ function preload(){
 }
 
 function dataManagement(){
-    songData='老八秘制小汉堡';
+    songData='老八秘制小汉堡是是是是是';
     //generate a long string list name as this.tmp
 }
 
 //gui System below
+let guiY=600;
 function theGui(){
     this.data=[];
     this.len=400;
     this.tmper=[];
     this.born=function(){
         for(let i=0;i<4;i++){
-            this.tmper[i]=new gui_s(width/2-200+i*100,600);
+            this.tmper[i]=new gui_s(width/2-200+i*100,guiY);
         }
     }
     this.show=function(){
@@ -49,7 +52,9 @@ function gui_s(_x, _y){
 function words() {
     this.len=8;
     this.maps=[];
+    this.mappos=[];
     this.times=0;
+    this.pointer=0;
     this.boxtmp=[];//we tmp a list of positions of boxes in order to make a fade FX
                    //the array should be like [][][][]>>>the single word's head
                                             //[][][][]>>>key
@@ -60,13 +65,35 @@ function words() {
             for(let j=0;j<4;j++) {
                 //we tmp the numbers of the key instead of utf8 char in the xinhua.csv
                 //[][][][]>>the position in the box means drop position
+                let a=songData[i*4+j]
                 this.maps[i][j]=a;
+                let pos=int(random(4));
+                if (i!=0 && j!=0){
+                    while(this.mappos[0].indexOf(pos)!=-1){
+                        pos=int(random(4));
+                    }
+                }else{
+                    
+                }
+                if (i==0){
+                    this.mappos.append(pos);
+                }
             }
         }
+        this.pointer+=8;
     }
     this.work=function(_b){
-        //generate two lines of key,one for current display ,one for next play
+        if (abs(mouseY-guiY)<25){
+            score[scene]+=5;
+        }else{
+            score[scene]+=2;
+        }
+        if (this.maps[1][_b]=="NA"){
+            this.maps[1][_b]=songData[this.pointer+_b-1];
+        }
+
         this.times+=1;//in order to manage one single touch not long press
+
     }
 
     this.show=function(){
@@ -75,20 +102,9 @@ function words() {
             fill(168,216,185);
             text(myMap[this.maps[0][j]][1],guiSystem.tmper[j].pos[0],guiSystem.tmper[j].pos[1])
         }
+
     }
-    this.boxDrop=function(){
-        for(let i=0;i<4;i++){
-            for (let j=0;j<this.tailLen;j++){
-                let saturation=map(j,0,3,0.5,1);
-                fill(112*saturation,124*saturation,116*saturation);
-                rect(guiSystem.tmper[i].pos[0],this.boxtmp[i][0]-j*50,50,50);
-                if(j==this.tailLen-1){
-                    textSize(16);
-                    text(myMap[this.maps[0][i]][0],guiSystem.tmper[i].pos[0],this.boxtmp[i][0]);
-                }
-            }
-        }
-    }
+
 }
 
 
@@ -126,7 +142,9 @@ function setup() {
     createCanvas(windowWidth,windleHeight);
     fill(123, 0 , 0);
     textFont('Arial');
+    frameRate(60);
     rectMode(CENTER);
+    dataManagement();
     myMap=new Array();
     myMap=myTable.getArray();
     guiSystem=new theGui();
