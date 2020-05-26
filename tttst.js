@@ -1,11 +1,10 @@
 let songLen=0;//total second!
 let lyricLen=0;
-let allLyrics=[];
-let allLyricsInLine="";
 let lyricPos=0;
-let lyricsTime=[[],//begin time
-                []];//end time
+let lyrics=[[],//begin time
+            []];//end time
 let mouseIsReleased=false;
+let T;
 
 //preload must be at the top of the program
 function preload(){
@@ -29,17 +28,30 @@ function popUp(){
         this.tmpSize[i]=120;
     }
     this.update(T)=function{
-        for(let i=0;i<4;i++){
-            if(mouseY>400 && mouseY<560 && mouseX>220+160*i && mouseX<220+160*(i+1)) {
-                if (mouseIsReleased) {
-                    this.tmp[i]="NA"
-                }
-                if()
+        let nowP=0;
+        for(let i=0;i<lyrics[0].length;i++){
+            if(T>lyrics[1][i] && T<lyrics[1][i+1]){
+                nowP=i;
+                break;
             }
-        while(this.tmp.indexOf("NA")!==-1){
-            this.tmp[this.tmp.indexOf("NA")]=allLyricsInLine[lyricPos];
-            lyricPos+=1;
         }
+        for(let i=0;i<4;i++){
+            if(mouseX>220+i*160 && mouseX<380+i*160){
+                if(mouseIsReleased){
+                    for(let j=0;j<myLyric.tmp.length;j++){
+                        if(abs(myLyric.tmp[j].pos/100-T)<10){
+                            myLyric.tmp[j].trig=true;
+                            if(abs(myLyric.tmp[j].pos/100-T)<8){
+
+                            }
+                        }
+                    }
+                    mouseIsReleased=false;
+                }
+            }
+        }
+        //auto fill
+
 
     }
 }
@@ -47,7 +59,7 @@ function popUp(){
 
 let mov=0;
 function lyricLine() {
-    this.tmp = new Array();
+    this.tmp = [];
     this.lyricNum=0;
     this.update = function (T) {
         for (let i = 0; i < this.tmp.length; i++) {
@@ -56,8 +68,11 @@ function lyricLine() {
                 this.tmp.slice(i);
             }
         }
+        while(this.tmp.length<=10){
+            let a=s_lyric(lyrics[0][lyricPos],lyrics[1][lyricPos]);
+            this.tmp.push(a);
+        }
 
-        mov=T*100;
     }
 }
 
@@ -72,7 +87,7 @@ function s_lyric(){
     this.alpha=255;
     this.po=false;
     this.born=function(pos,key){
-        this.pos=pos;
+        this.pos=pos*100;
         this.key=key;
     }
     this.up=function(){
@@ -94,13 +109,14 @@ function s_lyric(){
             }
             this.alpha-=5;
         }
-        fill(0,0,0,this.alpha);
+        fill(126,126,126,this.alpha);
         rect(this.pos-mov,270,this.siz,this.siz,5,5,5,5);
         textSize(this.size);
         text(this.key,this.pos-mov,270);
 
     }
 }
+
 
 function countBoard(){
     this.score=0;
@@ -115,9 +131,10 @@ let myLyric;
 function setup() {
     createCanvas(1080,720);
     myLyric=lyricLine();
-
+    myPop=popUp();
+    0
 }
 
 function draw() {
-
+    mov=T*100;
 }
