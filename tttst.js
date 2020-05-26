@@ -18,16 +18,24 @@ function mouseReleased(){
     mouseIsReleased=true;
 }
 
+function search(a){
+
+}
+
 function popUp(){
     this.tmp=[];
     this.tmpSize=[];
     for(let i=0;i<4;i++){
-        this.tmp[i]="NA";
+        let r=int(random(4));
+        while(lyrics[0][i]===this.tmp[r]){
+            r=int(random(4));
+        }
+        this.tmp[i]=lyrics[0][i];
     }
     for(let i=0;i<4;i++){
         this.tmpSize[i]=120;
     }
-    this.update(T)=function{
+    this.update=function(T){
         let nowP=0;
         for(let i=0;i<lyrics[0].length;i++){
             if(T>lyrics[1][i] && T<lyrics[1][i+1]){
@@ -44,15 +52,16 @@ function popUp(){
                             if(abs(myLyric.tmp[j].pos/100-T)<8){
 
                             }
+                            break;
                         }
                     }
                     mouseIsReleased=false;
                 }
             }
         }
-        //auto fill
-
-
+        for(let i=0;i<4;i++){
+            if(this.tmp)
+        }
     }
 }
 
@@ -119,20 +128,40 @@ function s_lyric(){
 
 
 function countBoard(){
-    this.score=0;
+    this.scores=[];
+    this.num=0;
+    this.update=function(){
+        for(let i=0;i<this.scores.length;i++){
+            if(this.scores[i].life===false){
+                this.scores.slice(i);
+            }
+            this.scores[i].update();
+        }
+    }
+    this.add=function(score){
+        let a=s_score(score);
+        this.scores.add(a);
+    }
+}
+function s_score(score){
+    this.size;
+    this.num=score;
+    this.life=true;
     this.update=function(){
 
-
     }
+
 }
 
 let myLyric;
+let myPop;
+let myBoard;
 //p5 drawing parts
 function setup() {
     createCanvas(1080,720);
     myLyric=lyricLine();
     myPop=popUp();
-    0
+    myBoard=countBoard();
 }
 
 function draw() {
