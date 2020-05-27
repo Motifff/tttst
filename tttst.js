@@ -12,10 +12,7 @@ let myTable;
 //preload must be at the top of the program
 function preload(){
     theTable=loadTable('data/xinhua.csv','csv','header');
-    myTable=theTable.getArray();
-    player=loadSound("");
-    songLen=player.size();
-    lyricLen=songLen*100;
+    //player=loadSound("data/1.mp3");
 }
 
 
@@ -78,11 +75,12 @@ function popUp(){
             if(this.tmpSize[i]>120){
                 this.tmpSize[i]*=0.9;
             }
-        }
-
-        if(this.tmp[i].pos/100<520){
-            this.tmp[i]=lyrics[0][nowP+4];
-            this.tmpTime[i]=lyrics[1][nowP+4];
+            if(this.tmp[i].pos/100<520){
+                this.tmp[i]=lyrics[0][nowP+4];
+                this.tmpTime[i]=lyrics[1][nowP+4];
+            }
+            fill(0,0,0);
+            rect(220+i*160,380+i*160,this.tmpSize[i],this.tmpSize[i],5,5,5,5);
         }
     }
 }
@@ -198,6 +196,8 @@ function setup() {
     myLyric=lyricLine();
     myPop=popUp();
     myBoard=countBoard();
+    lyricLen=songLen*100;
+    myTable=theTable.getArray();
 }
 
 function draw() {
