@@ -6,13 +6,14 @@ let lyrics=[[],//begin time
 let mouseIsReleased=false;
 let T;
 let theTable;
+let player;
 let myTable;
 
 //preload must be at the top of the program
 function preload(){
     theTable=loadTable('data/xinhua.csv','csv','header');
     myTable=theTable.getArray();
-
+    player=loadSound("");
     songLen=player.size();
     lyricLen=songLen*100;
 }
@@ -48,7 +49,7 @@ function popUp(){
     for(let i=0;i<4;i++){
         this.tmpSize[i]=120;
     }
-    this.update=function(T){
+    this.update=function(){
         let nowP=0;
         for(let i=0;i<lyrics[0].length-1;i++){
             if(T>lyrics[1][i] && T<lyrics[1][i+1]){
@@ -91,7 +92,7 @@ let mov=0;
 function lyricLine() {
     this.tmp = [];
     this.lyricNum=0;
-    this.update = function (T) {
+    this.update = function () {
         for (let i = 0; i < this.tmp.length; i++) {
             this.tmp[i].up();
             if (this.tmp[i].life === false) {
@@ -158,6 +159,13 @@ function countBoard(){
             }
             this.scores[i].update();
         }
+        beginShape();
+        vertex(0,0);
+        vertex(400,0);
+        vertex(350,50);
+        vertex(0,50);
+        vertex(0,0);
+        endShape();
     }
     this.add=function(score){
         let a=s_score(score);
@@ -169,8 +177,15 @@ function s_score(score){
     this.num=score;
     this.life=true;
     this.update=function(){
-        textSize(this.size);
-        text(this.num,540,200);
+        if(this.size<180){
+            textSize(this.size);
+            fill(255,255,0);
+            rect(540,400-this.size/5,this.size*1.5,this.size,this.size/100,this.size/100,this.size/100,this.size/100);
+            text(this.num,540,400-this.size/5);
+            this.size*=1.1;
+        }else{
+            this.life=false;
+        }
     }
 }
 
@@ -187,4 +202,8 @@ function setup() {
 
 function draw() {
     mov=T*100;
+    T=player.currentTime;
+    myLyric.update();
+    myPop.update();
+    myBoard.update();
 }
