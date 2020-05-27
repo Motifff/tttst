@@ -5,9 +5,13 @@ let lyrics=[[],//begin time
             []];//end time
 let mouseIsReleased=false;
 let T;
+let theTable;
+let myTable;
 
 //preload must be at the top of the program
 function preload(){
+    theTable=loadTable('data/xinhua.csv','csv','header');
+    myTable=theTable.getArray();
 
     songLen=player.size();
     lyricLen=songLen*100;
@@ -19,25 +23,34 @@ function mouseReleased(){
 }
 
 function search(a){
-
+    for(let i=0;i<myTable.length;i++){
+        if(a===myTable[0][i]){
+            let b=myTable[1][i];
+            return b;
+        }
+    }
 }
 
 function popUp(){
     this.tmp=[];
+    this.tmpTime=[];
     this.tmpSize=[];
+    this.tmpColor=[];
     for(let i=0;i<4;i++){
         let r=int(random(4));
         while(lyrics[0][i]===this.tmp[r]){
             r=int(random(4));
         }
         this.tmp[i]=lyrics[0][i];
+        this.tmpTime[i]=lyrics[1][i];
+        this.tmpColor[i]=0;
     }
     for(let i=0;i<4;i++){
         this.tmpSize[i]=120;
     }
     this.update=function(T){
         let nowP=0;
-        for(let i=0;i<lyrics[0].length;i++){
+        for(let i=0;i<lyrics[0].length-1;i++){
             if(T>lyrics[1][i] && T<lyrics[1][i+1]){
                 nowP=i;
                 break;
@@ -50,17 +63,25 @@ function popUp(){
                         if(abs(myLyric.tmp[j].pos/100-T)<10){
                             myLyric.tmp[j].trig=true;
                             if(abs(myLyric.tmp[j].pos/100-T)<8){
-
+                                myBoard.scores.add(100);
+                            }else{
+                                myBoard.scores.add(80);
                             }
                             break;
                         }
                     }
                     mouseIsReleased=false;
                 }
+                this.tmpSize[i]=160;
+            }
+            if(this.tmpSize[i]>120){
+                this.tmpSize[i]*=0.9;
             }
         }
-        for(let i=0;i<4;i++){
-            if(this.tmp)
+
+        if(this.tmp[i].pos/100<520){
+            this.tmp[i]=lyrics[0][nowP+4];
+            this.tmpTime[i]=lyrics[1][nowP+4];
         }
     }
 }
@@ -120,7 +141,7 @@ function s_lyric(){
         }
         fill(126,126,126,this.alpha);
         rect(this.pos-mov,270,this.siz,this.siz,5,5,5,5);
-        textSize(this.size);
+        textSize(this.siz);
         text(this.key,this.pos-mov,270);
 
     }
@@ -144,13 +165,13 @@ function countBoard(){
     }
 }
 function s_score(score){
-    this.size;
+    this.size=120;
     this.num=score;
     this.life=true;
     this.update=function(){
-
+        textSize(this.size);
+        text(this.num,540,200);
     }
-
 }
 
 let myLyric;
